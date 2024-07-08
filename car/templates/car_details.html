@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="col-12">
+<div class="card">
+    <div class="card-body">
+      <img src="{{car.image.url}}" class="card-img-top" alt="..." style= "width:50%">
+      <h2 class="card-title">{{car.title}}</h2>
+      <p class="card-text">
+          {{car.description}}
+      </p>
+      <p><strong>Brand: </strong>
+         
+          <button class='btn btn-primary btn-sm m-1'>
+              {{car.brand.name}}
+          </button>
+      </p>
+      <p><strong>Price: </strong>
+         
+        <button class='btn btn-primary btn-sm m-1'>
+            {{car.price}}
+        </button>
+    </p>
+    <p><strong>Quantity: </strong>
+         
+      
+        {% if car.quantity %}
+        <button class='btn btn-primary btn-sm m-1'>
+        In Stock
+      </button>
+        {% else %}
+        <button class='btn btn-danger btn-sm m-1'>
+        Out Of Stock
+      </button>
+        {% endif %}
+      
+  </p>
+      <p>
+        {% if request.user.is_authenticated and car.quantity > 0 %}
+        <a href={% url 'purchase_car' car.id %}>
+          <button class='btn btn-warning btn-lg m-1'>
+            Buy Now
+        </button>
+        </a>
+        {% endif %}
+      </p>
+    </div>
+</div>
+</div>
+
+<div class="card m-2">
+
+<h5 class="p-3">Total comments: {{ comments|length }}</h5>
+
+{% if comments %}
+  <div class="comment-list">
+    {% for comment in comments %}
+      <div class="card-body border m-2">
+        <p>{{ comment.name }} {{ comment.created_on }}</p>
+        <p>{{ comment.body }}</p>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+<div class="card-body border m-2">
+  <p>No comments yet.</p>
+</div>
+{% endif %}
+
+  </div>
+
+<div class="card m-2">
+    <div class="card-body">
+      <form method="post">
+        <h1>Add Comment</h1>
+          {% csrf_token %}
+          {{comment_form | crispy}}
+        <button class='btn btn-primary'>submit</button>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

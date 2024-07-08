@@ -1,0 +1,45 @@
+
+  {% extends 'base.html' %}
+  {% load crispy_forms_tags %}
+  
+  {% block content %}
+  <div class="container-fluid">
+  <div>
+    <h1 class="mt-2">Welcome {{ request.user.username }}</h1>
+      <a class="btn btn-primary mt-2" href={% url 'edit_profile' %}>Edit you profile</a>
+  </div>
+  
+  <h1 class="mt-3">My Orders</h1>
+      
+      {% if data %}
+          <ul>
+              {% for order in data %}
+                  <li>
+                      <strong>Order ID:</strong> {{ order.id }}<br>
+                      <strong>Total Price:</strong> BDT {{ order.total_price }}<br>
+                      <strong>Created At:</strong> {{ order.created_at }}<br>
+                      <strong>Car Information:</strong>
+                      <ul>
+                          
+                              <h5>{{ order.cars.title }} </h5>
+                              <h5>Price: BDT {{  order.cars.price }}</h5>
+                              {% if  order.cars.image %}
+                                      <img src="{{  order.cars.image.url }}" alt="{{  order.cars.title }}" style="max-width: 200px;"><br>
+                                  {% else %}
+                                      No image available<br>
+                                  {% endif %}
+                                  <strong>Description:</strong> {{  order.cars.description }}<br>
+                                  <strong>Brand: </strong>{{  order.cars.brand.name }}<br>
+                         
+                      </ul>
+                      <hr>
+                  </li>
+              {% endfor %}
+          </ul>
+      {% else %}
+          <h5 class="mx-5">No orders found.</h5>
+          <h5  class="mx-5">Create an Order Goto <a class="text-decoration-none" href={% url 'homepage' %}>Homepage</a>
+      {% endif %}
+          </div>
+  {% endblock %}
+  

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex flex-wrap px-5 pt-3 align-items-center">
+  <div class="col-lg-6 col-md-12">
+    <h1 class="px-3">Welcome to Car Hut</h1>
+    <p style="text-align: justify;" class="p-3" >
+      The automotive industry is a crucial part of the global economy, producing vehicles that efficiently transport people and goods within nations and across entire regions. These companies manufacture cars, trucks, vans, and sport utility vehicles (SUVs). Some even produce motorcycles, all-terrain vehicles, and commercial vehicles like transport trucks and buses. The biggest auto manufacturers have a large global footprint, selling vehicles to consumers and businesses worldwide. These major companies are primarily headquartered in just a few countries that lead the industry; however, the list of the 10 largest manufacturers also includes car companies from other countries.
+    </p>
+  </div>
+  
+  <div class="col-lg-6 col-md-12">
+    <img src="{% static 'car.webp' %}" width="100%"/>
+  </div>
+</div>
+
+{% comment %} all brand {% endcomment %}
+
+<div class="d-flex flex-wrap mx-5 mt-2">
+    <div class="col-3 p-3">
+       <h5> Find Your Best Brand </h5>
+    </div>
+    <div class="col-9 p-3">
+        {% for i in brand %}
+          
+          <a href={% url 'brand_wise_post' i.slug %} class="text-decoration-none text-dark">
+            <button class="btn btn-primary">{{i.name}}</button>
+          </a>
+        {% endfor %}
+    </div>
+</div>
+
+    <div class="col-12 p-3">
+      <h4 class="text-center">{{ data | length}} results found</h4>
+      <div class="d-flex flex-wrap justify-content-center">
+        {% for car in data %}
+        <div class="card mt-3 mb-3 mx-2" style="width: 17rem;">
+              <div class="card-body">
+                <img src="{{car.image.url}}" class="card-img-top" alt="{{car.title}}">
+                <h5 class="card-title">
+                    <a  class="text-decoration-none" href="{% url 'details' car.id %}">{{car.title}}</a>
+                </h5>
+                <p class="card-text">
+                    {{car.description | slice:"100"}}
+                </p> 
+                <p>Brand: 
+                  <button class='btn btn-primary btn-sm m-1'>
+                      {{car.brand.name}}
+                  </button>
+              </p>
+              <p>Price: 
+                <button class='btn btn-primary btn-sm m-1'>
+                    BDT {{car.price}}
+                </button>
+            </p>
+                <div class="d-flex flex-wrap justify-content-between">
+                  <p> 
+                     
+                          {% if car.quantity %}
+                          <button class='btn btn-primary btn-sm m-1'>
+                          In Stock
+                        </button>
+                          {% else %}
+                          <button class='btn btn-danger btn-sm m-1'>
+                          Out Of Stock
+                        </button>
+                          {% endif %}
+                      
+                  </p>
+                  <p>
+                  {% if request.user.is_authenticated and car.quantity > 0 %}
+                  <a href={% url 'purchase_car' car.id %}>
+                    <button class='btn btn-warning btn-sm m-1'>
+                      Buy Now
+                  </button>
+                  </a>
+                  {% endif %}
+                </p>
+              </div>
+              
+              </div>
+          </div>
+        {% endfor %}
+      </div>
+    
+  </div>
+  
+
+{% endblock %}
